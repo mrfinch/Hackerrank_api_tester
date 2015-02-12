@@ -13,6 +13,8 @@ var total_arr = [];
 var failed_arr = [];
 var errors = []
 errors.push("----------------------------------------------------");
+var notify = [];
+var warn=0;
 
 function makeApiReq(test_id,data,callhelper){
 	console.log('************************************************');
@@ -22,7 +24,7 @@ function makeApiReq(test_id,data,callhelper){
 
 	var endpoint = "/x/api/v2/tests/" + test_id + "/candidates/?" + querystring.stringify(data);
 	//var endpoint = "/36234/candidates/?limit=1&access_token=ec33e7479826452ce0a28941be55bc9e44d9a68583a669e00b1403fd90914afd";
-	console.log(endpoint);  
+	console.log(endpoint);
 	var headers = {};
 	var options = {
 		host: host,
@@ -30,7 +32,7 @@ function makeApiReq(test_id,data,callhelper){
 		method: "GET",
 		headers: headers
 	};
-	
+
 	var req = https.request(options,function(res){
 		var response = "";
 		res.on('data',function(data){
@@ -39,7 +41,7 @@ function makeApiReq(test_id,data,callhelper){
 		res.on('end',function(){
 			console.log('Status:'+res.statusCode);
 			if(res.statusCode == 200){
-				var jresp = JSON.parse(response);	
+				var jresp = JSON.parse(response);
 				var strt = query['start'] ? query['start'] : 0;
 				total++;
 				checkSchema(jresp,query['limit'],jresp.total,strt);
@@ -103,7 +105,7 @@ return base_schema;
 }
 
 function getDataSchema(){
-	var dataSchema = 
+	var dataSchema =
 	{
 	  "$schema": "http://json-schema.org/draft-04/schema#",
 	  "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates",
@@ -164,8 +166,8 @@ function getDataSchema(){
 	    },
 	    "scores_tags_split": {
 	      "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/scores_tags_split",
-	      "type": ["object","array"],
-	      "properties": {}
+	      "type": ["array","object"],
+	      "items": []
 	    },
 	    "scores_questions_split": {
 	      "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/scores_questions_split",
@@ -287,6 +289,15 @@ function getDataSchema(){
 	return dataSchema;
 }
 
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
+
 function checkSchema(response,exp_num,total_num,strt){
 	var baseSchema = getBaseSchema();
 	var baseResult = tv4.validateResult(response,baseSchema);
@@ -296,7 +307,7 @@ function checkSchema(response,exp_num,total_num,strt){
 		errors.push(baseResult.error);
 		errors.push("----------------------------------------------------");
 		failed++;
-		total++;	
+		total++;
 	}
 	else{
 		total++;
@@ -319,6 +330,22 @@ function checkSchema(response,exp_num,total_num,strt){
 			total++;
 		}
 		count++;
+		if(data[item].scores_tags_split.length>0){
+			notify.push("ID:"+data[item].id + ".Scores tags split array schema not checked and is non empty for this id");
+			warn++;
+		}
+		if(!isEmpty(data[item].scores_questions_split)){
+			notify.push("ID:"+data[item].id + ".Scores questions split object schema not checked and is non empty for this id");
+			warn++;
+		}
+		if(!isEmpty(data[item].invite_details)){
+			notify.push("ID:"+data[item].id + ".Invite details object schema not checked and is non empty for this id")
+			warn++;
+		}
+		if(!isEmpty(data[item].plagiarism_details)){
+			notify.push("ID:"+data[item].id + ".Plagiarism details object schema not checked and is non empty for this id")
+			warn++;
+		}
 	}
 	if(exp_num==-1){
 		if(count!=(total_num-strt)){
@@ -362,8 +389,8 @@ function checkSchema(response,exp_num,total_num,strt){
 	else{
 		total++;
 	}*/
-	finalResult();	
-	//helperTesting(response); 
+	finalResult();
+	//helperTesting(response);
 }
 
 function startTesting(){
@@ -379,25 +406,32 @@ function helperTesting(resp,callhelper){
 }
 
 function finalResult(){
+	console.log('-----------------------------------------------');
+	var l=notify.length;
+	for(var i=0;i<l;i++){
+		console.log(notify[i]);
+	}
+	console.log('-----------------------------------------------');
 	var l=errors.length;
 	for(var i=0;i<l;i++){
 		console.log(errors[i]);
 	}
-	console.log("FAILED:"+failed+",TOTAL:"+total);
+	console.log("FAILED:"+failed+",TOTAL:"+total+",WARNINGS:"+warn);
 	total_arr.push(total);
 	failed_arr.push(failed);
 	total_sum += total;
 	failed_sum += failed;
 	console.log("TOTAL FAILED:"+failed_sum+",TOTAL TESTS:"+total_sum);
 	console.log('************************************************'+'\n');
-	total=0;failed=0;
+	total=0;failed=0;warn=0;
 	empty = [];
+	notify = [];
 }
 
 program
 	.version('0.0.1')
-	.option('-a,--access_token [value]','Access Token')
-	.option('-t,--testid <n>','Test id',parseInt)
+	.option('-a,--access_token [value]','*Access Token-Required')
+	.option('-t,--testid <n>','*Test id-Required',parseInt)
 	.option('-l,--limit <n>','Limit',parseInt)
 	.option('-s,--startnum <n>','Start',parseInt)
 	.option('-st,--starttime [value]','Starttime')
@@ -443,7 +477,7 @@ if(program.endtime)
 	query['endtime'] = program.endtime
 /*args.forEach(function(val,index,array){
 	if(index==0){
-		test_id = val;	
+		test_id = val;
 		return;
 	}
 	query[prop[index-1]] = val;
