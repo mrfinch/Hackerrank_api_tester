@@ -480,9 +480,9 @@ function startTesting(){
 
 program
 	.version('0.0.1')
-	.option('-a,--access_token [value]','Access Token')
-	.option('-t,--testid <n>','Test id',parseInt)
-	.option('-i,--cid <n>','Candidate id',parseInt)
+	.option('-a,--access_token [value]','*Access Token-Required')
+	.option('-t,--testid <n>','*Test id-Required',parseInt)
+	.option('-i,--cid <n>','*Candidate id-Required',parseInt)
 	.parse(process.argv)
 
 if(program.access_token)

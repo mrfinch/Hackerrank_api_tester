@@ -478,9 +478,9 @@ function startTesting(){
 
 program
 	.version('0.0.1')
-	.option('-a,--access_token [value]','Access Token')
-	.option('-t,--testid <n>','Test id',parseInt)
-	.option('-e,--email [value]','Name or email')
+	.option('-a,--access_token [value]','*Access Token-Required')
+	.option('-t,--testid <n>','*Test id-Required',parseInt)
+	.option('-e,--email [value]','*Name/email-Required')
 	.parse(process.argv)
 
 if(program.access_token)
