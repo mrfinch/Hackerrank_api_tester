@@ -8,8 +8,12 @@ var query = {}
 var errors = []
 errors.push("----------------------------------------------------");
 var failed=0,total=0;
+var total_sum = 0;
+var failed_sum = 0;
+var total_arr = [];
+var failed_arr = [];
 
-function makeApiReq(testid,data){
+function makeApiReq(testid,data,callhelper){
 	console.log(data);
 	console.log('Test id:'+testid);
 	var endpoint = '/x/api/v1/tests/' + testid + '/attempts?' + querystring.stringify(data);
@@ -33,17 +37,20 @@ function makeApiReq(testid,data){
 				var jresp = JSON.parse(response);
 				total++;
 				checkSchema(jresp,query['iDisplayLength'],query['iDisplayStart']);
+				if(query['iDisplayLength']!=25 || query['iDisplayStart']!=0 || query['state']!=-1 || query['ats']!=-1){
+					helperTesting(testid,callhelper+1)
+				}
 			}
 			else{
 				failed++;total++;
 			}
 		});
 	});
-	req.end();	
+	req.end();
 }
 
 function getSchema(){
-	var schema = 
+	var schema =
 	{
 	  "$schema": "http://json-schema.org/draft-04/schema#",
 	  "id": "https://www.hackerrank.com/x/api/v1/tests/{id}/attempts",
@@ -239,7 +246,7 @@ function getModelSchema(){
 	    "tags_score",
 	    "question_types_score"
 	  ]
-	}; 
+	};
 	return modelSchema;
 }
 
@@ -306,7 +313,7 @@ function finalResult(){
 		console.log(errors[i]);
 	}
 	console.log("FAILED:"+failed+",TOTAL:"+total/*+",WARNINGS:"+warn*/);
-/*	total_arr.push(total);
+	total_arr.push(total);
 	failed_arr.push(failed);
 	total_sum += total;
 	failed_sum += failed;
@@ -314,12 +321,21 @@ function finalResult(){
 	console.log('************************************************'+'\n');
 	total=0;failed=0;warn=0;
 	empty = [];
-	notify = [];*/
+	//notify = [];
 }
 
+function helperTesting(test_id,callhelper){
+	if(callhelper==1){
+		query['iDisplayStart'] = 0;
+		query['iDisplayLength'] = 25;
+		query['state'] = -1;
+		query['ats'] = -1;
+		makeApiReq(test_id,query);
+	}
+}
 
 function startTesting(){
-	makeApiReq(test_id,query);
+	makeApiReq(test_id,query,0);
 }
 
 program
