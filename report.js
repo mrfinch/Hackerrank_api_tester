@@ -32,7 +32,7 @@ function makeApiReq(testid,data){
 			if(res.statusCode==200){
 				var jresp = JSON.parse(response);
 				total++;
-				checkSchema(jresp);
+				checkSchema(jresp,query['iDisplayLength'],query['iDisplayStart']);
 			}
 			else{
 				failed++;total++;
@@ -243,7 +243,7 @@ function getModelSchema(){
 	return modelSchema;
 }
 
-function checkSchema(response){
+function checkSchema(response,limit,offset){
 	var schema = getSchema();
 	var baseResult = tv4.validateResult(response,schema);
 	//console.log(response);
@@ -262,10 +262,12 @@ function checkSchema(response){
 
 	var models = response.models;
 	var modelSchema = getModelSchema();
+	var cnt = 0;
 	for(item in models){
-		//console.log(models[item]);
+		//console.log(models[item].id+' '+item);
 		var res = tv4.validateResult(models[item],modelSchema);
 		//console.log(res.error);
+		//console.log(item);
 		if(res.valid==false){
 			errors.push("FAIL-MODEL field");
 			errors.push("ID:"+models[item].id);
@@ -277,6 +279,17 @@ function checkSchema(response){
 		else{
 			total++;
 		}
+		cnt++;
+	}
+	//console.log(response.total);
+	if(cnt==(response.total-offset) || (limit==cnt) || (offset>response.total && cnt==0)){
+		total++;
+	}
+	else{
+		errors.push("Output does not satisy the limit");
+		errors.push("Expected:"+limit+",Found:"+cnt);
+		errors.push("----------------------------------------------------");
+		failed++;total++;
 	}
 	finalResult();
 }
@@ -321,6 +334,8 @@ program
 	.option('-e,--end_date [value]','End date')
 	.option('-c,--isortcol <n>','iSortCol_0',parseInt)
 	.option('-r,--ssortdir [value]','sSortDir_0')
+	.option('-l,--limit <n>','iDisplayLength',parseInt)
+	.option('-o,--offset <n>','iDisplayStart',parseInt)
 	.parse(process.argv)
 
 if(program.access_token)
@@ -366,5 +381,15 @@ if(program.isortcol)
 
 if(program.ssortdir)
 	query['sSortDir_0'] = program.sSortDir_0
+
+if(program.limit)
+	query['iDisplayLength'] = program.limit
+else
+	query['iDisplayLength'] = 25
+
+if(program.offset)
+	query['iDisplayStart'] = program.offset
+else
+	query['iDisplayStart'] = 0
 
 startTesting();
