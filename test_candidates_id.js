@@ -9,6 +9,8 @@ var query = {};
 var errors = [];
 var total = 0;
 var failed = 0;
+var warn = 0;
+var notify = [];
 errors.push("----------------------------------------------------");
 
 function makeApiReq(test_id,cid,data,callhelper){
@@ -168,8 +170,8 @@ function getSchema(){
 	        "candidate_details": {
 	          "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/{cid}/data/candidate_details",
 	          "type": "array",
-	          "items": {},
-	          "additionalItems": false
+	          "items": []//,
+	          //"additionalItems": false
 	        },
 	        "invited": {
 	          "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/{cid}/data/invited",
@@ -242,8 +244,8 @@ function getSchema(){
 	              "tags": {
 	                "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/{cid}/data/questions/2/tags",
 	                "type": "array",
-	                "items": {},
-	                "additionalItems": false
+	                "items": {}
+	                //"additionalItems": false
 	              },
 	              "answered": {
 	                "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/{cid}/data/questions/2/answered",
@@ -362,8 +364,8 @@ function getSchema(){
 	              "comments": {
 	                "id": "https://www.hackerrank.com/x/api/v2/tests/{id}/candidates/{cid}/data/questions/2/comments",
 	                "type": "array",
-	                "items": {},
-	                "additionalItems": false
+	                "items": {}
+	                //"additionalItems": false
 	              }
 	            }
 	          },
@@ -448,6 +450,15 @@ function getSchema(){
 	return schema;
 }
 
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
+
 function checkSchema(response){
 	var schema = getSchema();
 	var result = tv4.validateResult(response,schema);
@@ -463,15 +474,52 @@ function checkSchema(response){
 	else{
 		total++;
 	}
+	//console.log('fes');
+	//console.log(response.data);
+	//candidate_details
+	if(response.data.candidate_details.length>0){
+		notify.push("ID:"+response.data.id + ".Candidate details array schema not checked and is non empty for this id");
+		warn++;
+	}
+	var ques = response.data.questions;
+	for(item in ques){
+		if(ques[item].tags.length>0){
+			notify.push("ID:"+response.data.id + ".Question ID:"+ques[item].id+ ".Tags array schema not checked and is non empty for this id");
+			warn++;
+		}
+		if(ques[item].comments.length>0){
+			notify.push("ID:"+response.data.id + ".Question ID:"+ques[item].id+ ".Comments array schema not checked and is non empty for this id");
+			warn++;
+		}
+	}
+	if(!isEmpty(response.data.invite_details)){
+		notify.push("ID:"+response.data.id + ".Invite details object schema not checked and is non empty for this id");
+		warn++;	
+	}
+	if(!isEmpty(response.data.plagiarism_details)){
+		notify.push("ID:"+response.data.id + ".Plagiarism details object schema not checked and is non empty for this id")
+		warn++;
+	}
+	if(!isEmpty(response.data.scores_tags_split)){
+		notify.push("ID:"+response.data.id + ".Scores tags split object schema not checked and is non empty for this id")
+		warn++;
+	}
 	finalResult();
 }
 
 function finalResult(){
+	console.log('-----------------------------------------------');
+	console.log('WARNINGS:');
+	var l=notify.length;
+	for(var i=0;i<l;i++){
+		console.log(notify[i]);
+	}
+	console.log('-----------------------------------------------');
 	var l=errors.length;
 	for(var i=0;i<l;i++){
 		console.log(errors[i]);
 	}
-	console.log("FAILED:"+failed+",TOTAL:"+total);
+	console.log("FAILED:"+failed+",TOTAL:"+total+",WARNINGS:"+warn);
 }
 
 function startTesting(){

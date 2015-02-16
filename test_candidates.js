@@ -2,6 +2,7 @@ var https = require('https');
 var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
+var _ = require('lodash');
 var host = "www.hackerrank.com";
 var query = {};
 var test_id = -1;
@@ -44,7 +45,7 @@ function makeApiReq(test_id,data,callhelper){
 				var jresp = JSON.parse(response);
 				var strt = query['start'] ? query['start'] : 0;
 				total++;
-				checkSchema(jresp,query['limit'],jresp.total,strt);
+				checkSchema(jresp,query['limit'],jresp.total,strt,callhelper);
 				helperTesting(jresp,callhelper+1);
 			}
 			else{
@@ -289,6 +290,623 @@ function getDataSchema(){
 	return dataSchema;
 }
 
+function getData(num){
+	if(num==0){
+		var d = 
+		{
+	    "data": [
+	        {
+	            "id": 939697,
+	            "email": "shravanashok@gmail.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-09-15T12:29:41Z",
+	            "endtime": "2014-09-15T13:28:34Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/939697/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=939697&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "111.93.139.74",
+	            "scores_tags_split": [],
+	            "scores_questions_split": {
+	                "project": 0,
+	                "design": 0
+	            },
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "3533 seconds"
+	        },
+	        {
+	            "id": 952299,
+	            "email": "a@b.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-09-25T06:05:21Z",
+	            "endtime": "2014-09-25T06:12:51Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/952299/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=952299&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "125.17.1.38",
+	            "scores_tags_split": [],
+	            "scores_questions_split": {
+	                "project": 0,
+	                "design": 0
+	            },
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "450 seconds"
+	        },
+	        {
+	            "id": 957540,
+	            "email": "a1@b.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-09-30T10:06:24Z",
+	            "endtime": "2014-09-30T10:21:27Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/957540/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=957540&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "115.249.242.252",
+	            "scores_tags_split": [],
+	            "scores_questions_split": {
+	                "project": 0,
+	                "design": 0
+	            },
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "903 seconds"
+	        },
+	        {
+	            "id": 969208,
+	            "email": "shravanashok1@gmail.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-10-10T06:14:43Z",
+	            "endtime": "2014-10-10T06:58:14Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/969208/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=969208&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "122.167.84.231",
+	            "scores_tags_split": [],
+	            "scores_questions_split": {
+	                "project": 0,
+	                "design": 0
+	            },
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "2611 seconds"
+	        },
+	        {
+	            "id": 977189,
+	            "email": "shravan+1@hackerrank.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-10-17T08:48:56Z",
+	            "endtime": "2014-10-17T08:51:22Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/977189/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=977189&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "111.93.139.74",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "146 seconds"
+	        },
+	        {
+	            "id": 1004924,
+	            "email": "shravanashok+1@gmail.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-11-07T04:36:40Z",
+	            "endtime": "2014-11-07T04:44:46Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1004924/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1004924&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "106.216.148.175",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "486 seconds"
+	        },
+	        {
+	            "id": 1005383,
+	            "email": "shravan@interviewstreet.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-11-07T09:39:02Z",
+	            "endtime": "2014-11-07T10:38:53Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1005383/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1005383&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139322",
+	                "139323",
+	                "139324"
+	            ],
+	            "ip_address": "122.178.242.242",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139322",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139323",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                },
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "3591 seconds"
+	        },
+	        {
+	            "id": 1013065,
+	            "email": "shravanashok+2@gmail.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-11-11T11:19:28Z",
+	            "endtime": "2014-11-11T12:17:39Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1013065/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1013065&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "111.93.139.74",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "3491 seconds"
+	        },
+	        {
+	            "id": 1015920,
+	            "email": "sruthi@hackerrank.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-11-13T10:19:28Z",
+	            "endtime": "2014-11-13T10:33:13Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1015920/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1015920&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "117.249.165.166",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "825 seconds"
+	        },
+	        {
+	            "id": 1050453,
+	            "email": "test@hackerrank.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2014-12-05T08:02:55Z",
+	            "endtime": "2014-12-05T08:02:59Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1050453/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1050453&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "123.63.241.66",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "4 seconds"
+	        },
+	        {
+	            "id": 1098407,
+	            "email": "shrava@hr.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2015-01-21T07:00:53Z",
+	            "endtime": "2015-01-21T07:01:30Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1098407/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1098407&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "111.93.139.74",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "37 seconds"
+	        },
+	        {
+	            "id": 1098470,
+	            "email": "spathak@altimetrik.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2015-01-21T07:46:19Z",
+	            "endtime": "2015-01-21T07:46:29Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1098470/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1098470&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "223.227.26.105",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "10 seconds"
+	        },
+	        {
+	            "id": 1100626,
+	            "email": "shravanashok@hackerrank.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2015-01-22T09:46:51Z",
+	            "endtime": "2015-01-22T10:19:24Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1100626/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1100626&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "182.74.246.98",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "1953 seconds"
+	        },
+	        {
+	            "id": 1124485,
+	            "email": "shravan-ashok@hackerrank.com",
+	            "tid": 31972,
+	            "score": 0,
+	            "starttime": "2015-02-05T11:38:19Z",
+	            "endtime": "2015-02-05T11:50:45Z",
+	            "status": 7,
+	            "ats_state": 1,
+	            "report_url": "https://www.hackerrank.com/x/tests/31972/candidates/1124485/report/?authkey=8695cb659f16c094ba035902f21dad4c",
+	            "pdf_url": "https://www.hackerrank.com/x/api/v1/tests/31972/pdf?aids[]=1124485&cmd=download&usecache=true&authkey=8695cb659f16c094ba035902f21dad4c",
+	            "questions_array": [
+	                "139324"
+	            ],
+	            "ip_address": "182.74.184.138",
+	            "scores_tags_split": {},
+	            "scores_questions_split": {},
+	            "added_time_buffer": 0,
+	            "candidate_details": [],
+	            "invited": false,
+	            "invite_details": {},
+	            "questions": [
+	                {
+	                    "qid": "139324",
+	                    "answered": false,
+	                    "score": 0,
+	                    "answer": ""
+	                }
+	            ],
+	            "plagiarism_details": {},
+	            "plagiarism": false,
+	            "feedback": "",
+	            "rating": "Zero",
+	            "total_time_taken": "746 seconds"
+	        }
+	    ],
+	    "status": true,
+	    "message": "Success",
+	    "total": 14,
+	    "http_status": 200,
+	    "length": 14
+		};
+		return d;
+	}
+	return "";
+}
+
 function isEmpty(obj) {
     for(var prop in obj) {
         if(obj.hasOwnProperty(prop))
@@ -298,7 +916,7 @@ function isEmpty(obj) {
     return true;
 }
 
-function checkSchema(response,exp_num,total_num,strt){
+function checkSchema(response,exp_num,total_num,strt,callhelper){
 	var baseSchema = getBaseSchema();
 	var baseResult = tv4.validateResult(response,baseSchema);
 	if(baseResult.valid == false){
@@ -390,7 +1008,21 @@ function checkSchema(response,exp_num,total_num,strt){
 		total++;
 	}*/
 	finalResult();
+	if(callhelper==1){
+		compareData(response); 
+	}
 	//helperTesting(response);
+}
+
+function compareData(data){
+	var base = getData(0);
+	var result = _.isEqual(data,base);
+	if(!result){
+		console.log("FAILED-Data comparison");
+	}
+	else{
+		console.log("PASSED-Data Comparison");
+	}
 }
 
 function startTesting(){
@@ -402,7 +1034,7 @@ function helperTesting(resp,callhelper){
 	query['limit'] = resp.total;
 	query['start'] = 0;
 	if(callhelper==1)
-		makeApiReq(test_id,query,1);
+		makeApiReq(test_id,query,callhelper);
 }
 
 function finalResult(){
@@ -421,7 +1053,7 @@ function finalResult(){
 	failed_arr.push(failed);
 	total_sum += total;
 	failed_sum += failed;
-	console.log("TOTAL FAILED:"+failed_sum+",TOTAL TESTS:"+total_sum);
+	console.log("TOTAL-FAILED:"+failed_sum+",TOTAL-TESTS:"+total_sum);
 	console.log('************************************************'+'\n');
 	total=0;failed=0;warn=0;
 	empty = [];
