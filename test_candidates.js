@@ -1065,9 +1065,9 @@ program
 	.option('-a,--access_token [value]','*Access Token-Required')
 	.option('-t,--testid <n>','*Test id-Required',parseInt)
 	.option('-l,--limit <n>','Limit',parseInt)
-	.option('-s,--startnum <n>','Start',parseInt)
-	.option('-st,--starttime [value]','Starttime')
-	.option('-et,--endtime [value]','Endtime')
+	.option('-n,--startnum <n>','Start',parseInt)
+	.option('-s,--starttime [value]','Starttime')
+	.option('-e,--endtime [value]','Endtime')
 	.parse(process.argv)
 
 /*

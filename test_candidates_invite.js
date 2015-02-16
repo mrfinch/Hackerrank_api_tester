@@ -151,8 +151,8 @@ program
 	.option('-f,--test_finish_url [value]','Candidate will be redirected to this URL when the test gets over. By default, they are sent to the feedback page.')
 	.option('-r,--test_result_url [value]','Webhook URL for candidate report. When the report is processed the report data will be sent to this URL as a webhook. By default, the inviter will get the report by email')
 	.option('-s,--send_email [value]','Flag to send the invite email to the candidate. Can be true/false.Default-false')
-	.option('-ta,--tags [value]','Comma separated list of candidate tags')
-	.option('-fo,--force [value]','Flag which forces sending an email even when the candidate has already been invited. Can be true/false,Default-false')
+	.option('-g,--tags [value]','Comma separated list of candidate tags')
+	.option('-c,--force [value]','Flag which forces sending an email even when the candidate has already been invited. Can be true/false,Default-false')
 	.option('-h,--hide_login_credentials [value]','Flag to hide candidate details in the test URL. Can be true/false.Default-True')
 	.parse(process.argv)
 

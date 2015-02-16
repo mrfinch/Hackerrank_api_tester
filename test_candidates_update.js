@@ -138,7 +138,7 @@ program
 	.option('-e,--evaluator_email [value]','Evaluator email')
 	.option('-f,--test_finish_url [value]','Candidate will be redirected to this URL when the test gets over. By default, they are sent to the feedback page.')
 	.option('-r,--test_result_url [value]','Webhook URL for candidate report. When the report is processed the report data will be sent to this URL as a webhook. By default, the inviter will get the report by email')
-	.option('-ta,--tags [value]','Comma separated list of candidate tags')
+	.option('-g,--tags [value]','Comma separated list of candidate tags')
 	.parse(process.argv)
 
 if(program.access_token)
