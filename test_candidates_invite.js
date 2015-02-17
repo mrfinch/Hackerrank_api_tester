@@ -2,7 +2,7 @@ var https = require('https');
 var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
-var host = "www.hackerrank.com";
+var host = "";
 var query = {};
 var test_id = -1;
 var errors = []
@@ -10,7 +10,7 @@ var failed=0;
 var total=0;
 errors.push("----------------------------------------------------");
 
-function makeApiReq(test_id,data){
+function makeApiReq(test_id,data,host){
 	var post_data = JSON.stringify(data);
 	var post_path = "/x/api/v2/tests/" + test_id + "/candidates";
 	var headers = {};
@@ -137,7 +137,7 @@ function finalResult(){
 }
 
 function startTesting(){
-	makeApiReq(test_id,query);
+	makeApiReq(test_id,query,host);
 }
 
 program
@@ -154,6 +154,7 @@ program
 	.option('-g,--tags [value]','Comma separated list of candidate tags')
 	.option('-c,--force [value]','Flag which forces sending an email even when the candidate has already been invited. Can be true/false,Default-false')
 	.option('-h,--hide_login_credentials [value]','Flag to hide candidate details in the test URL. Can be true/false.Default-True')
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 if(program.access_token)
@@ -212,5 +213,10 @@ if(program.hide_login_credentials)
 	query['hide_login_credentials'] = program.hide_login_credentials
 else
 	query['hide_login_credentials'] = "true";
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 
 startTesting();

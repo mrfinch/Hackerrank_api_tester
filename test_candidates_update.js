@@ -2,7 +2,7 @@ var https = require('https');
 var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
-var host = "www.hackerrank.com";
+var host = "";
 var query = {};
 var test_id = -1;
 var errors = []
@@ -11,7 +11,7 @@ var total=0;
 errors.push("----------------------------------------------------");
 
 
-function makeApiReq(test_id,data){
+function makeApiReq(test_id,data,host){
 	var put_data = JSON.stringify(data);
 	var put_path = "/x/api/v2/tests/" + test_id + "/candidates";
 	var headers = {
@@ -127,7 +127,7 @@ function finalResult(){
 }
 
 function startTesting(){
-	makeApiReq(test_id,query);
+	makeApiReq(test_id,query,host);
 }
 
 program
@@ -139,6 +139,7 @@ program
 	.option('-f,--test_finish_url [value]','Candidate will be redirected to this URL when the test gets over. By default, they are sent to the feedback page.')
 	.option('-r,--test_result_url [value]','Webhook URL for candidate report. When the report is processed the report data will be sent to this URL as a webhook. By default, the inviter will get the report by email')
 	.option('-g,--tags [value]','Comma separated list of candidate tags')
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 if(program.access_token)
@@ -176,5 +177,10 @@ if(program.test_result_url)
 
 if(program.tags)
 	query['tags'] = program.tags
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 
 startTesting();

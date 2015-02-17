@@ -3,7 +3,7 @@ var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
 var _ = require('lodash');
-var host = "www.hackerrank.com";
+var host = "";
 var query = {};
 var test_id = -1;
 var total = 0;
@@ -17,7 +17,7 @@ errors.push("----------------------------------------------------");
 var notify = [];
 var warn=0;
 
-function makeApiReq(test_id,data,callhelper){
+function makeApiReq(test_id,data,callhelper,host){
 	console.log('************************************************');
 	console.log("New Request");
 	console.log(data);
@@ -1026,7 +1026,7 @@ function compareData(data){
 }
 
 function startTesting(){
-	makeApiReq(test_id,query,0);
+	makeApiReq(test_id,query,0,host);
 }
 
 function helperTesting(resp,callhelper){
@@ -1034,7 +1034,7 @@ function helperTesting(resp,callhelper){
 	query['limit'] = resp.total;
 	query['start'] = 0;
 	if(callhelper==1)
-		makeApiReq(test_id,query,callhelper);
+		makeApiReq(test_id,query,callhelper,host);
 }
 
 function finalResult(){
@@ -1068,6 +1068,7 @@ program
 	.option('-n,--startnum <n>','Start',parseInt)
 	.option('-s,--starttime [value]','Starttime')
 	.option('-e,--endtime [value]','Endtime')
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 /*
@@ -1099,14 +1100,21 @@ if(program.limit)
 	query['limit'] = program.limit
 else
 	query['limit'] = -1;
+
 if(program.startnum || program.startnum==0)
 	query['start'] = program.startnum
 else
 	query['start'] = 0;
+
 if(program.starttime)
 	query['starttime'] = program.starttime
 if(program.endtime)
 	query['endtime'] = program.endtime
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 /*args.forEach(function(val,index,array){
 	if(index==0){
 		test_id = val;

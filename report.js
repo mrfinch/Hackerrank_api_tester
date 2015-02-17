@@ -3,7 +3,7 @@ var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
 var _ = require('lodash');
-var host = "www.hackerrank.com";
+var host = "";
 var query = {}
 var errors = []
 errors.push("----------------------------------------------------");
@@ -13,7 +13,7 @@ var failed_sum = 0;
 var total_arr = [];
 var failed_arr = [];
 
-function makeApiReq(testid,data,callhelper){
+function makeApiReq(testid,data,callhelper,host){
 	console.log(data);
 	console.log('Test id:'+testid);
 	var endpoint = '/x/api/v1/tests/' + testid + '/attempts?' + querystring.stringify(data);
@@ -330,12 +330,12 @@ function helperTesting(test_id,callhelper){
 		query['iDisplayLength'] = 25;
 		query['state'] = -1;
 		query['ats'] = -1;
-		makeApiReq(test_id,query);
+		makeApiReq(test_id,query,host);
 	}
 }
 
 function startTesting(){
-	makeApiReq(test_id,query,0);
+	makeApiReq(test_id,query,0,host);
 }
 
 program
@@ -352,6 +352,7 @@ program
 	.option('-r,--ssortdir [value]','sSortDir_0')
 	.option('-l,--limit <n>','iDisplayLength',parseInt)
 	.option('-o,--offset <n>','iDisplayStart',parseInt)
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 if(program.access_token)
@@ -407,5 +408,10 @@ if(program.offset)
 	query['iDisplayStart'] = program.offset
 else
 	query['iDisplayStart'] = 0
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 
 startTesting();

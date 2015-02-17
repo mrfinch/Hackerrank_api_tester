@@ -2,7 +2,7 @@ var https = require('https');
 var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
-var host = "www.hackerrank.com";
+var host = "";
 var query = {};
 var tst_id = -1;
 var errors = []
@@ -10,7 +10,7 @@ var failed=0;
 var total=0;
 errors.push("----------------------------------------------------");
 
-function makeApiReq(test_id,data){
+function makeApiReq(test_id,data,host){
 	var put_data = JSON.stringify(data);
 	var put_path = "/x/api/v2/tests/" + test_id + "/candidates/set_ats_state";
 	console.log(put_path);
@@ -109,7 +109,7 @@ function finalResult(){
 }
 
 function startTesting(){
-	makeApiReq(test_id,query);
+	makeApiReq(test_id,query,host);
 }
 
 program
@@ -118,6 +118,7 @@ program
 	.option('-t,--testid <n>','*Test id-Required',parseInt)
 	.option('-u,--username [value]','*Username/email-Required')
 	.option('-s,--ats_state <n>','*ATS State (http://hr.gs/ats_states)-Required',parseInt)
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 
@@ -153,5 +154,10 @@ else
 	console.log('Ats_state requried');
 	process.exit(1);
 }
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 
 startTesting();

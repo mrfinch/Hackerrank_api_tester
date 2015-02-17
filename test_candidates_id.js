@@ -2,7 +2,7 @@ var https = require('https');
 var querystring = require('querystring');
 var tv4 = require('tv4');
 var program = require('commander');
-var host = "www.hackerrank.com";
+var host = "";
 var test_id = -1;
 var cid = -1;
 var query = {};
@@ -13,7 +13,7 @@ var warn = 0;
 var notify = [];
 errors.push("----------------------------------------------------");
 
-function makeApiReq(test_id,cid,data,callhelper){
+function makeApiReq(test_id,cid,data,callhelper,host){
 	console.log('************************************************');
 	console.log("New Request");
 	console.log(data);
@@ -523,7 +523,7 @@ function finalResult(){
 }
 
 function startTesting(){
-	makeApiReq(test_id,cid,query,0);
+	makeApiReq(test_id,cid,query,0,host);
 }
 
 program
@@ -531,6 +531,7 @@ program
 	.option('-a,--access_token [value]','*Access Token-Required')
 	.option('-t,--testid <n>','*Test id-Required',parseInt)
 	.option('-i,--cid <n>','*Candidate id-Required',parseInt)
+	.option('-x,--host [value]','Hostname')
 	.parse(process.argv)
 
 if(program.access_token)
@@ -556,5 +557,10 @@ else
 	console.log('Candidate id requried');
 	process.exit(1);	
 }
+
+if(program.host)
+	host = program.host
+else
+	host = "www.hackerrank.com"
 
 startTesting();
